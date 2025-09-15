@@ -124,10 +124,9 @@ class CoderAgent(Agent):  # 同样继承自Agent类
                     )
 
                     # 更新对话历史 - 添加助手的响应
-                    await self.append_chat_history(
-                        response.choices[0].message.model_dump()
-                    )
-                    logger.info(response.choices[0].message.model_dump())
+                    message_dict = self.model._message_to_dict(response.choices[0].message)
+                    await self.append_chat_history(message_dict)
+                    logger.info(message_dict)
 
                     # 执行工具调用
                     logger.info("执行工具调用")

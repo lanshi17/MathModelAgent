@@ -34,6 +34,32 @@ class LLM:
         self.max_tokens: int | None = None  # 添加最大token数限制
         self.task_id = task_id
 
+    def _message_to_dict(self, message) -> dict:
+        """
+        将LiteLLM响应消息转换为字典格式，兼容不同版本的LiteLLM
+
+        Args:
+            message: LiteLLM响应消息对象
+
+        Returns:
+            dict: 消息的字典表示
+        """
+        if hasattr(message, 'model_dump'):
+            try:
+                return message.model_dump()
+            except AttributeError:
+                # 如果有属性但调用失败，fallback 到手动处理
+                pass
+
+        # 处理字符串或其他类型的消息
+        message_dict = {
+            "role": getattr(message, 'role', 'assistant'),
+            "content": getattr(message, 'content', str(message)),
+            "tool_calls": getattr(message, 'tool_calls', None)
+        }
+        # 移除空值
+        return {k: v for k, v in message_dict.items() if v is not None}
+
     async def chat(
         self,
         history: list = None,

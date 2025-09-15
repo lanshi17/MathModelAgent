@@ -139,14 +139,14 @@ async def validate_openalex_email(request: ValidateOpenalexEmailRequest):
         response = requests.get(
             f"https://api.openalex.org/works?mailto={request.email}"
         )
-        logger.debug(f"OpenAlex Email 验证响应: {response}")
+        logger.debug(f"OpenAlex Email validation response: {response}")
         response.raise_for_status()
         return ValidateOpenalexEmailResponse(
-            valid=True, message="✓ OpenAlex Email 验证成功"
+            valid=True, message="✓ OpenAlex Email validation successful"
         )
     except Exception as e:
         return ValidateOpenalexEmailResponse(
-            valid=False, message=f"✗ OpenAlex Email 验证失败: {str(e)}"
+            valid=False, message=f"✗ OpenAlex Email validation failed: {str(e)}"
         )
 
 

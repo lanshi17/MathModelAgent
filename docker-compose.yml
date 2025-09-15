@@ -2,12 +2,15 @@
 
 services:
   redis:
-    image: redis:alpine
+    image: redis/redis-stack:latest
     container_name: mathmodelagent_redis
     ports:
       - "6379:6379" # 将 Redis 容器的 6379 端口映射到主机的 6379 端口
     volumes:
       - redis_data:/data # Redis 数据的持久化存储卷
+    command: >
+      sh -c "echo 'Starting Redis Server' &&
+             redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru"
 
   backend:
     build:
@@ -20,6 +23,8 @@ services:
       - ./backend/.env.dev #从此文件加载环境变量
     environment:
       - ENV=DEV # 为后端显式设置 ENV
+      - LANG=C.UTF-8 # 设置编码支持
+      - LC_ALL=C.UTF-8
       # .env.dev 文件中的 REDIS_URL 应为 redis://redis:6379/0
     volumes:
       - ./backend:/app # 挂载后端代码以实现热重载 (开发环境)

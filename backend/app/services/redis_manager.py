@@ -24,10 +24,10 @@ class RedisManager:
             )
         try:
             await self._client.ping()
-            logger.info(f"Redis 连接建立成功: {self.redis_url}")
+            logger.info(f"Redis connection established successfully: {self.redis_url}")
             return self._client
         except Exception as e:
-            logger.error(f"无法连接到Redis: {str(e)}")
+            logger.error(f"Failed to connect to Redis: {str(e)}")
             raise
 
     async def set(self, key: str, value: str):

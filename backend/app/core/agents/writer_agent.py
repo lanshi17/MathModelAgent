@@ -104,8 +104,9 @@ class WriterAgent(Agent):  # 同样继承自Agent类
                 )
 
                 # 更新对话历史 - 添加助手的响应
-                await self.append_chat_history(response.choices[0].message.model_dump())
-                ic(response.choices[0].message.model_dump())
+                message_dict = self.model._message_to_dict(response.choices[0].message)
+                await self.append_chat_history(message_dict)
+                ic(message_dict)
 
                 try:
                     papers = await self.scholar.search_papers(query)
